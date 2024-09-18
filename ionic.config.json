@@ -1,0 +1,7 @@
+{
+  "name": "sending-yet",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}

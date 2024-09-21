@@ -7,7 +7,7 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+      <ion-fab horizontal="end" vertical="bottom">
         <ion-fab-button @click="exportTable">
           <ion-icon :icon="document"></ion-icon>
         </ion-fab-button>
@@ -90,36 +90,70 @@ import {
 } from "@ionic/vue";
 import { document } from "ionicons/icons";
 import { IIndication, IIndicationHeader, IMember } from "@/dtos";
-import { computed, Ref, ref, watch } from "vue";
+import { computed, onMounted, Ref, ref, useTemplateRef, watch } from "vue";
 import { exportToCsv, memberParse } from "@/utils";
 
-const pageName: Ref<string> = ref("Start");
+const STORAGE_TABLE_KEY = "table";
+const STORAGE_ID_KEY = "id";
+
+const table: Ref<IMember[]> = ref([]);
+const pageName: Ref<string> = ref("Main");
 const membersCount: Ref<number> = ref(Number.NaN);
 const indicationsHeaders: Ref<IIndicationHeader[]> = ref([]);
-const table: Ref<IMember[]> = ref([]);
 const idColumnName: Ref<string> = ref("");
+const hasSavedData: Ref<boolean> = ref(false);
 
-watch(membersCount, () => (table.value = members.value || 0), { deep: true });
+onMounted(() => {
+  const data = JSON.parse(
+    localStorage.getItem(STORAGE_TABLE_KEY) || JSON.stringify({})
+  ) as IMember[];
+  if (!(typeof data === typeof new Array<IMember>())) return;
+  table.value = data;
+  membersCount.value = table.value.length || Number.NaN;
+  indicationsHeaders.value =
+    (table.value[0]?.indications?.map(
+      (v) => v.header
+    ) as IIndicationHeader[]) || [];
+  idColumnName.value = localStorage.getItem(STORAGE_ID_KEY) || "";
+});
 
-watch(indicationsHeaders, () => (table.value = members.value || 0), {
+watch(membersCount, () => update(), { deep: true });
+
+watch(indicationsHeaders, () => update(), {
   deep: true,
 });
 
+watch(table, () => update(), { deep: true });
+
+watch(idColumnName, (value) => localStorage.setItem(STORAGE_ID_KEY, value));
+
 const members = computed((): IMember[] => {
+  const data = JSON.parse(
+    localStorage.getItem(STORAGE_TABLE_KEY) || JSON.stringify({})
+  ) as IMember[];
   return [...Array(Number.parseInt(membersCount.value.toString()) || 0)].map(
     (_: number, idx: number) =>
       ({
         id: idx,
-        indications: createIndications(),
+        indications: createIndications(
+          data[idx]?.indications.map((v) => v.value)
+        ),
       } as IMember)
   );
 });
 
-const createIndications = (): IIndication[] => {
-  return indicationsHeaders.value.map((header: IIndicationHeader) => ({
-    header,
-    value: Number.NaN,
-  }));
+const update = (): void => {
+  localStorage.setItem(STORAGE_TABLE_KEY, JSON.stringify(table.value));
+  table.value = members.value || [];
+};
+
+const createIndications = (values: number[] = []): IIndication[] => {
+  return indicationsHeaders.value.map(
+    (header: IIndicationHeader, idx: number) => ({
+      header,
+      value: values[idx] || Number.NaN,
+    })
+  );
 };
 
 const addHeader = (): void => {
@@ -128,8 +162,8 @@ const addHeader = (): void => {
   } as IIndicationHeader);
 };
 
-const exportTable = (): void => {
-  exportToCsv(memberParse(table.value, idColumnName.value));
+const exportTable = async (): Promise<void> => {
+  await exportToCsv(memberParse(table.value, idColumnName.value));
 };
 </script>
 

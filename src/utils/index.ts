@@ -1,8 +1,10 @@
 import { IIndication, IMember } from "@/dtos";
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 
 const DEFAULT_ID_COLUMN_NAME = "~";
+const FILE_NAME = "Table.csv";
 
-export const exportToCsv = (value: [][]) => {
+export const exportToCsv = async (value: [][]): Promise<void> => {
   const delimiter = ",";
   let csvString = "";
   value.forEach((rowValue) => {
@@ -11,11 +13,18 @@ export const exportToCsv = (value: [][]) => {
     });
     csvString += "\r\n";
   });
-
   csvString = "data:application/csv," + encodeURIComponent(csvString);
-  const el = document.createElement("A");
+
+  await Filesystem.writeFile({
+    path: FILE_NAME,
+    data: csvString,
+    directory: Directory.Documents,
+    encoding: Encoding.UTF8,
+  });
+
+  const el = document.createElement("a");
   el.setAttribute("href", csvString);
-  el.setAttribute("download", "someData.csv");
+  el.setAttribute("download", FILE_NAME);
   document.body.appendChild(el);
   el.click();
 };

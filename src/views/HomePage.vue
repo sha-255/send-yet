@@ -64,6 +64,12 @@
           </ion-card>
         </ion-list>
       </ion-content>
+      <ion-toast
+        :is-open="!!savedFileMessage"
+        :message="'File saved in ' + savedFileMessage"
+        :duration="5000"
+        @didDismiss="savedFileMessage = ''"
+      ></ion-toast>
     </ion-content>
   </ion-page>
 </template>
@@ -87,10 +93,11 @@ import {
   IonIcon,
   IonFabButton,
   IonFab,
+  IonToast,
 } from "@ionic/vue";
 import { document } from "ionicons/icons";
 import { IIndication, IIndicationHeader, IMember } from "@/dtos";
-import { computed, onMounted, Ref, ref, useTemplateRef, watch } from "vue";
+import { computed, onMounted, Ref, ref, watch } from "vue";
 import { exportToCsv, memberParse } from "@/utils";
 
 const STORAGE_TABLE_KEY = "table";
@@ -101,7 +108,7 @@ const pageName: Ref<string> = ref("Main");
 const membersCount: Ref<number> = ref(Number.NaN);
 const indicationsHeaders: Ref<IIndicationHeader[]> = ref([]);
 const idColumnName: Ref<string> = ref("");
-const hasSavedData: Ref<boolean> = ref(false);
+const savedFileMessage: Ref<string> = ref("");
 
 onMounted(() => {
   const data = JSON.parse(
@@ -163,7 +170,9 @@ const addHeader = (): void => {
 };
 
 const exportTable = async (): Promise<void> => {
-  await exportToCsv(memberParse(table.value, idColumnName.value));
+  savedFileMessage.value = await exportToCsv(
+    memberParse(table.value, idColumnName.value)
+  );
 };
 </script>
 

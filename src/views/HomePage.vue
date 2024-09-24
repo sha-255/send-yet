@@ -6,71 +6,69 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
-      <ion-fab horizontal="end" vertical="bottom">
-        <ion-fab-button @click="exportTable">
-          <ion-icon :icon="document"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
+    <ion-fab horizontal="end" vertical="bottom">
+      <ion-fab-button @click="exportTable">
+        <ion-icon :icon="document"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
 
+    <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">{{ pageName }}</ion-title>
         </ion-toolbar>
       </ion-header>
 
-      <ion-content>
-        <ion-input
-          placeholder="Dwellers..."
-          type="number"
-          v-model="membersCount"
-        ></ion-input>
-        <ion-card>
+      <ion-input
+        placeholder="Dwellers..."
+        type="number"
+        v-model="membersCount"
+      ></ion-input>
+      <ion-card>
+        <ion-card-header>
+          <ion-input placeholder="ID name..." v-model="idColumnName" />
+          <ion-input
+            placeholder="Indication name..."
+            v-for="(header, idx) in indicationsHeaders"
+            :key="idx"
+            v-model="header.name"
+          />
+        </ion-card-header>
+        <ion-card-content>
+          <ion-button @click="addHeader">Add</ion-button>
+          <ion-button @click="indicationsHeaders.pop()">Remove</ion-button>
+        </ion-card-content>
+      </ion-card>
+      <ion-list v-if="table.length">
+        <ion-card v-for="member in table" :key="member.id">
           <ion-card-header>
-            <ion-input placeholder="ID name..." v-model="idColumnName" />
-            <ion-input
-              placeholder="Indication name..."
-              v-for="(header, idx) in indicationsHeaders"
-              :key="idx"
-              v-model="header.name"
-            />
+            <ion-card-title>#{{ member.id + 1 }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-button @click="addHeader">Add</ion-button>
-            <ion-button @click="indicationsHeaders.pop()">Remove</ion-button>
+            <ion-list>
+              <ion-item
+                v-for="(indication, idx) in member.indications"
+                :key="idx"
+              >
+                <ion-label>{{ indication.header.name }}</ion-label>
+                <ion-input
+                  type="number"
+                  placeholder="Type here..."
+                  v-model="indication.value"
+                >
+                </ion-input>
+              </ion-item>
+            </ion-list>
           </ion-card-content>
         </ion-card>
-        <ion-list v-if="table.length">
-          <ion-card v-for="member in table" :key="member.id">
-            <ion-card-header>
-              <ion-card-title>#{{ member.id + 1 }}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-list>
-                <ion-item
-                  v-for="(indication, idx) in member.indications"
-                  :key="idx"
-                >
-                  <ion-label>{{ indication.header.name }}</ion-label>
-                  <ion-input
-                    type="number"
-                    placeholder="Type here..."
-                    v-model="indication.value"
-                  >
-                  </ion-input>
-                </ion-item>
-              </ion-list>
-            </ion-card-content>
-          </ion-card>
-        </ion-list>
-      </ion-content>
-      <ion-toast
-        :is-open="!!savedFileMessage"
-        :message="savedFileMessage"
-        :duration="5000"
-        @didDismiss="savedFileMessage = ''"
-      ></ion-toast>
+      </ion-list>
     </ion-content>
+    <ion-toast
+      :is-open="!!savedFileMessage"
+      :message="savedFileMessage"
+      :duration="5000"
+      @didDismiss="savedFileMessage = ''"
+    ></ion-toast>
   </ion-page>
 </template>
 

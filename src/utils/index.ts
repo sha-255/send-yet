@@ -1,5 +1,5 @@
 import { IIndication, IMember } from "@/dtos";
-import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 import { Capacitor } from "@capacitor/core";
 
 const DEFAULT_ID_COLUMN_NAME = "~";
@@ -19,14 +19,13 @@ const getFileName = (): string => {
 
 export const exportToCsv = async (value: [][]): Promise<string> => {
   const delimiter = ",";
-  let csvString = "";
+  let csvString: string = "";
   value.forEach((rowValue) => {
     rowValue.forEach((colValue) => {
       csvString += colValue + delimiter;
     });
     csvString += "\r\n";
   });
-  csvString = "data:application/csv," + encodeURIComponent(csvString);
   return await saveCsvString(csvString);
 };
 
@@ -34,21 +33,22 @@ const saveCsvString = async (data: string): Promise<string> => {
   const fileName = getFileName();
   if (Capacitor.isNativePlatform()) {
     return await nativeSave(fileName, data);
-  } else {
-    return await webSave(fileName, data);
   }
+  return await webSave(fileName, data);
 };
 
 const nativeSave = async (path: string, data: string): Promise<string> => {
+  const directory: Directory = Directory.Documents;
   try {
     await Filesystem.writeFile({
       path,
-      data,
-      directory: Directory.Documents,
+      data: data,
+      directory,
+      encoding: Encoding.UTF8,
     });
     const { uri } = await Filesystem.getUri({
       path,
-      directory: Directory.Documents,
+      directory,
     });
     return START_MESSAGE + uri;
   } catch (error) {
@@ -59,8 +59,9 @@ const nativeSave = async (path: string, data: string): Promise<string> => {
 };
 
 const webSave = async (path: string, data: string): Promise<string> => {
+  const csv = "data:application/csv," + encodeURIComponent(data);
   const el = document.createElement("a");
-  el.setAttribute("href", data);
+  el.setAttribute("href", csv);
   el.setAttribute("download", path);
   document.body.appendChild(el);
   el.click();

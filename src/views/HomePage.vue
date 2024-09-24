@@ -66,7 +66,7 @@
       </ion-content>
       <ion-toast
         :is-open="!!savedFileMessage"
-        :message="'File saved in ' + savedFileMessage"
+        :message="savedFileMessage"
         :duration="5000"
         @didDismiss="savedFileMessage = ''"
       ></ion-toast>

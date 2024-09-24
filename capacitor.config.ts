@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "io.sha255.sendingYet",
-  appName: "Sending yet",
+  appId: "io.sha255.sendYet",
+  appName: "Send yet",
   webDir: "dist",
 };
 

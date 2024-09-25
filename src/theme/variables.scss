@@ -1,0 +1,177 @@
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: #000;
+    --ion-background-color-step-50: #000;
+
+    --ion-color-primary: #000000;
+    --ion-color-primary-rgb: 0, 0, 0;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #000000;
+    --ion-color-primary-tint: #1a1a1a;
+
+    --ion-color-secondary: #000000;
+    --ion-color-secondary-rgb: 0, 0, 0;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast-rgb: 255, 255, 255;
+    --ion-color-secondary-shade: #000000;
+    --ion-color-secondary-tint: #1a1a1a;
+
+    --ion-color-tertiary: #6030ff;
+    --ion-color-tertiary-rgb: 96, 48, 255;
+    --ion-color-tertiary-contrast: #ffffff;
+    --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+    --ion-color-tertiary-shade: #542ae0;
+    --ion-color-tertiary-tint: #7045ff;
+
+    --ion-color-success: #2dd55b;
+    --ion-color-success-rgb: 45, 213, 91;
+    --ion-color-success-contrast: #000000;
+    --ion-color-success-contrast-rgb: 0, 0, 0;
+    --ion-color-success-shade: #28bb50;
+    --ion-color-success-tint: #42d96b;
+
+    --ion-color-warning: #ffc409;
+    --ion-color-warning-rgb: 255, 196, 9;
+    --ion-color-warning-contrast: #000000;
+    --ion-color-warning-contrast-rgb: 0, 0, 0;
+    --ion-color-warning-shade: #e0ac08;
+    --ion-color-warning-tint: #ffca22;
+
+    --ion-color-danger: #f45764;
+    --ion-color-danger-rgb: 244, 87, 100;
+    --ion-color-danger-contrast: #000000;
+    --ion-color-danger-contrast-rgb: 0, 0, 0;
+    --ion-color-danger-shade: #d74d58;
+    --ion-color-danger-tint: #f56874;
+
+    --ion-color-light: #f6f8fc;
+    --ion-color-light-rgb: 246, 248, 252;
+    --ion-color-light-contrast: #000000;
+    --ion-color-light-contrast-rgb: 0, 0, 0;
+    --ion-color-light-shade: #d8dade;
+    --ion-color-light-tint: #f7f9fc;
+
+    --ion-color-medium: #5f5f5f;
+    --ion-color-medium-rgb: 95, 95, 95;
+    --ion-color-medium-contrast: #ffffff;
+    --ion-color-medium-contrast-rgb: 255, 255, 255;
+    --ion-color-medium-shade: #545454;
+    --ion-color-medium-tint: #6f6f6f;
+
+    --ion-color-dark: #2f2f2f;
+    --ion-color-dark-rgb: 47, 47, 47;
+    --ion-color-dark-contrast: #ffffff;
+    --ion-color-dark-contrast-rgb: 255, 255, 255;
+    --ion-color-dark-shade: #ad9a9a;
+    --ion-color-dark-tint: #444444;
+    :root.md {
+      --ion-background-color: #000;
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    .wiggle {
+      margin: 1rem;
+    }
+  }
+
+  ion-input {
+    --ion-color-primary: #fff;
+    --ion-color-primary-rgb: 255, 255, 255;
+    --ion-color-primary-contrast: #000;
+    --ion-color-primary-contrast-rgb: 0, 0, 0;
+  }
+
+  ion-button {
+    --ion-color-primary: #0054e9;
+    --ion-color-primary-rgb: 0, 84, 233;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #004acd;
+    --ion-color-primary-tint: #1a65eb;
+  }
+}
+
+ion-button.md {
+  margin: 5px;
+  --border-radius: 999px;
+}
+
+//__________________fade
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+//________________nested
+//.outer,
+//.inner {
+//}
+
+//.inner {
+//}
+
+.nested-enter-active,
+.nested-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.nested-leave-active {
+  transition-delay: 0.25s;
+}
+
+.nested-enter-from,
+.nested-leave-to {
+  transform: translateY(30px);
+  opacity: 0;
+}
+
+.nested-enter-active .inner,
+.nested-leave-active .inner {
+  transition: all 0.3s ease-in-out;
+}
+.nested-enter-active .inner {
+  transition-delay: 0.25s;
+}
+
+.nested-enter-from .inner,
+.nested-leave-to .inner {
+  transform: translateX(30px);
+  opacity: 0.001;
+}
+
+//_________________________-fade-in
+.fade-in-enter-active {
+  transition: opacity 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+}
+
+.fade-in-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.fade-in-enter,
+.fade-in-leave-to {
+  opacity: 0;
+}
+//___________________________wiggle
+.wiggle {
+  animation: rotate 500s linear both;
+  animation-iteration-count: infinite;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0.1turn);
+  }
+  100% {
+    transform: rotate(1turn);
+  }
+}

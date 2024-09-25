@@ -6,10 +6,12 @@
 
 <script setup lang="ts">
 import { IonApp, IonRouterOutlet } from "@ionic/vue";
-import { StatusBar } from "@capacitor/status-bar";
 import { onMounted } from "vue";
+import { StatusBar } from "@capacitor/status-bar";
+import { Capacitor } from "@capacitor/core";
 
 onMounted(() => {
-  StatusBar.setBackgroundColor({ color: "#1F1F1F" });
+  if (!Capacitor.isNativePlatform()) return;
+  StatusBar.setBackgroundColor({ color: "#000" });
 });
 </script>
